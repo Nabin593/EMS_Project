@@ -1,0 +1,33 @@
+﻿@model Department
+
+<div class="container mt-4">
+    <h2 class="mb-4">Create New Department</h2>
+
+    <form asp-action="Create" method="post" class="border p-4 rounded shadow-sm bg-white">
+        <fieldset class="mb-3">
+            <legend class="fw-bold">Department Details</legend>
+            <div class="mb-3">
+                <label for="DepartmentName" class="form-label">Department Name</label>
+                <input asp-for="DepartmentName" class="form-control" id="DepartmentName" required />
+            </div>
+        </fieldset>
+        <div class="d-flex justify-content-lg-end">
+            <a asp-action="Index" class="btn btn-light">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    fieldset {
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    legend {
+        font-size: 1.1rem;
+        padding: 0 10px;
+        width: auto;
+    }
+</style>

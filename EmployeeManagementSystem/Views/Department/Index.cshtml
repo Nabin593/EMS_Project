@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Department>
+
+<h1 style="background-color: cadetblue; text-align: center; color: black; padding: 15px; font-weight: bold;">
+    List of Departments
+</h1>
+<a href="@Url.Action("Create")" class="btn btn-primary">Add Department</a>
+<table class="table table-bordered">
+    <thead>
+        <tr class="bg-dark text-white text-center">
+            <th>S.N</th>
+            <th>Department Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var department in Model.Select((value, index) => new { value, index }))
+        {
+            <tr class="@(department.index % 2 == 0 ? "table-light" : "table-secondary") text-center">
+                <td>@(department.index + 1)</td>
+                <td class="@(department.index % 2 == 0 ? "text-primary fw-bold" : "text-success fw-bold")">
+                    @department.value.DepartmentName
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

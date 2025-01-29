@@ -1,0 +1,91 @@
+﻿@model IEnumerable<EmployeeManagementSystem.Models.Employee>
+
+@{
+    ViewData["Title"] = "Employee List";
+}
+
+<h1 style="background-color:cadetblue; text-align:center;">List of Employees</h1>
+
+<form method="get" class="mb-3">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="Search by Name"
+                   value="@ViewBag.Search" />
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="department" class="form-control" placeholder="Search by Department"
+                   value="@ViewBag.Department" />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-action="Index" class="btn btn-secondary">Clear</a>
+        </div>
+    </div>
+</form>
+
+<a asp-action="Create" class="btn btn-success mb-3">Add New Employee</a>
+
+<table class="table table-striped table-bordered border-dark text-center">
+    <thead class="thead-dark text-center" style="background-color: #343a40; color: white;">
+        <tr>
+            <th class="border">S.N</th>
+            <th class="border">Name</th>
+            <th class="border">Department</th>
+            <th class="border">Salary</th>
+            <th class="border">Date of Joining</th>
+            <th class="border">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            int sn = ((ViewBag.CurrentPage - 1) * 10) + 1;
+            @foreach (var employee in Model)
+            {
+                <tr>
+                    <td class="border">@sn</td>
+                    <td class="border">@employee.Name</td>
+                    <td class="border">@employee.Department</td>
+                    <td class="border">@employee.Salary.ToString("F2")</td>
+                    <td class="border">@employee.DateOfJoining.ToString("yyyy-MM-dd")</td>
+                    <td class="border">
+                        <a asp-action="Edit" asp-route-id="@employee.EmployeeID" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@employee.EmployeeID" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                sn++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center border">No employees found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-search="@ViewBag.Search"
+                   asp-route-department="@ViewBag.Department" asp-route-page="@(ViewBag.CurrentPage - 1)">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-search="@ViewBag.Search"
+                       asp-route-department="@ViewBag.Department" asp-route-page="@i">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-search="@ViewBag.Search"
+                   asp-route-department="@ViewBag.Department" asp-route-page="@(ViewBag.CurrentPage + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
