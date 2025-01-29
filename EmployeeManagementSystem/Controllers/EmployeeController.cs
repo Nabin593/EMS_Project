@@ -17,15 +17,42 @@ namespace EmployeeManagementSystem.Controllers
         #endregion
 
         #region Search Filter and pagination
-        public async Task<IActionResult> Index(string search = "", string department = "", int page = 1)
+        //public async Task<IActionResult> Index(string search = "", string department = "", int page = 1)
+        //{
+        //    page = page < 1 ? 1 : page;
+        //    var parameters = new
+        //    {
+        //        Search = string.IsNullOrEmpty(search) ? null : search,
+        //        Department = string.IsNullOrEmpty(department) ? null : department,
+        //        PageIndex = page,
+        //        PageSize
+        //    };
+
+        //    using (var connection = _repository.Connection)
+        //    {
+        //        var multi = await connection.QueryMultipleAsync("EXEC sp_GetEmployeesPaginated @Search, @Department, @PageIndex, @PageSize", parameters);
+
+        //        var employees = await multi.ReadAsync<Employee>();
+        //        var paginationData = await multi.ReadFirstAsync<(int TotalCount, int TotalPages)>();
+
+        //        ViewBag.TotalPages = paginationData.TotalPages;
+        //        ViewBag.CurrentPage = page;
+        //        ViewBag.Search = search;
+        //        ViewBag.Department = department;
+
+        //        return View(employees);
+        //    }
+        //}
+        public async Task<IActionResult> Index(string search = "", string department = "", int page = 1, string sortingOrder = "")
         {
             page = page < 1 ? 1 : page;
+
             var parameters = new
             {
                 Search = string.IsNullOrEmpty(search) ? null : search,
                 Department = string.IsNullOrEmpty(department) ? null : department,
                 PageIndex = page,
-                PageSize
+                PageSize = 10  // Set your PageSize value here
             };
 
             using (var connection = _repository.Connection)
@@ -35,13 +62,42 @@ namespace EmployeeManagementSystem.Controllers
                 var employees = await multi.ReadAsync<Employee>();
                 var paginationData = await multi.ReadFirstAsync<(int TotalCount, int TotalPages)>();
 
+                // Sorting Logic
+                switch (sortingOrder)
+                {
+                    case "Name":
+                        employees = employees.OrderBy(e => e.Name);
+                        break;
+                    case "Department":
+                        employees = employees.OrderBy(e => e.Department);  
+                        break;
+                    case "Salary":
+                        employees = employees.OrderBy(e => e.Salary);  
+                        break;
+                    default:
+                        break;
+                }
                 ViewBag.TotalPages = paginationData.TotalPages;
                 ViewBag.CurrentPage = page;
                 ViewBag.Search = search;
                 ViewBag.Department = department;
+                ViewBag.SortingOrder = sortingOrder;
 
                 return View(employees);
             }
+        }
+
+        #endregion
+
+        #region GetBy ID
+        public async Task<IActionResult> EmpDetails(int id)
+        {
+            var employee = (await _repository.QueryAsync<Employee>(
+                "select  b.DepartmentName as Department,* from Employees a join Departments b on a.DepartmentID = b.DepartmentID WHERE EmployeeID = @EmployeeID AND IsDeleted = 0",
+                new { EmployeeID = id })).FirstOrDefault();
+
+            if (employee == null) return NotFound();
+            return View(employee);
         }
         #endregion
 

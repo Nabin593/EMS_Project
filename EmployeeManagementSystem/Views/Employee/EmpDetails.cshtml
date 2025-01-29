@@ -1,0 +1,22 @@
+﻿@model Employee
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <h2 style="text-align:center;">Detail of @Model.Name</h2>
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <img src="~/css/user.png" class="card-img-top rounded-circle mx-auto d-block" style="width: 100px; height: 100px;" alt="Employee Image">
+                <div class="card-body">
+                    <h5 class="card-title">Name: @Model.Name</h5>
+                    <p class="card-text">Department: @Model.Department</p>
+                    <p class="card-text">Join Date: @Model.DateOfJoining</p>
+                    <p class="card-text">Salary: @Model.Salary</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
