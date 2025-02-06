@@ -17,32 +17,6 @@ namespace EmployeeManagementSystem.Controllers
         #endregion
 
         #region Search Filter and pagination
-        //public async Task<IActionResult> Index(string search = "", string department = "", int page = 1)
-        //{
-        //    page = page < 1 ? 1 : page;
-        //    var parameters = new
-        //    {
-        //        Search = string.IsNullOrEmpty(search) ? null : search,
-        //        Department = string.IsNullOrEmpty(department) ? null : department,
-        //        PageIndex = page,
-        //        PageSize
-        //    };
-
-        //    using (var connection = _repository.Connection)
-        //    {
-        //        var multi = await connection.QueryMultipleAsync("EXEC sp_GetEmployeesPaginated @Search, @Department, @PageIndex, @PageSize", parameters);
-
-        //        var employees = await multi.ReadAsync<Employee>();
-        //        var paginationData = await multi.ReadFirstAsync<(int TotalCount, int TotalPages)>();
-
-        //        ViewBag.TotalPages = paginationData.TotalPages;
-        //        ViewBag.CurrentPage = page;
-        //        ViewBag.Search = search;
-        //        ViewBag.Department = department;
-
-        //        return View(employees);
-        //    }
-        //}
         public async Task<IActionResult> Index(string search = "", string department = "", int page = 1, string sortingOrder = "")
         {
             page = page < 1 ? 1 : page;
@@ -52,7 +26,7 @@ namespace EmployeeManagementSystem.Controllers
                 Search = string.IsNullOrEmpty(search) ? null : search,
                 Department = string.IsNullOrEmpty(department) ? null : department,
                 PageIndex = page,
-                PageSize = 10  // Set your PageSize value here
+                PageSize = 10  
             };
 
             using (var connection = _repository.Connection)
@@ -61,8 +35,6 @@ namespace EmployeeManagementSystem.Controllers
 
                 var employees = await multi.ReadAsync<Employee>();
                 var paginationData = await multi.ReadFirstAsync<(int TotalCount, int TotalPages)>();
-
-                // Sorting Logic
                 switch (sortingOrder)
                 {
                     case "Name":
